@@ -5,7 +5,19 @@ class Node:
         self.right_child = right_child
 
 def kd_tree(point_list, depth=0, start=0, end=None):
+    """
+    Recursively constructs a KD-Tree from a list of k-dimensional points.
     
+    Parameters:
+    - point_list: List of k-dimensional points.
+    - depth: Current depth of recursion.
+    - start: Starting index for the current subset of points.
+    - end: Ending index for the current subset of points.
+    
+    Returns:
+    - Root node of the constructed KD-Tree.
+    """
+ 
     # The ending index is the last one of the pont list by default
     if end is None:
         end = len(point_list)
