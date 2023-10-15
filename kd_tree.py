@@ -4,10 +4,16 @@ class Node:
         self.left_child = left_child
         self.right_child = right_child
 
-def kd_tree(point_list, depth=0):
-    if len(point_list) <= 0:
-        return None
+def kd_tree(point_list, depth=0, start=0, end=None):
+    
+    # The ending index is the last one of the pont list by default
+    if end is None:
+        end = len(point_list)
 
+    # No node in the current sub-tree
+    if start >= end:
+        return None
+    
     # Select axis based on depth so that axis cycles through all valid values
     k = len(point_list[0])  # assumes all points have the same dimension
     axis = depth % k
