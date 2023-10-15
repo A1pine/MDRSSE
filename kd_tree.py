@@ -26,17 +26,23 @@ def kd_tree(point_list, depth=0, start=0, end=None):
     if start >= end:
         return None
     
-    # Select axis based on depth so that axis cycles through all valid values
-    k = len(point_list[0])  # assumes all points have the same dimension
-    axis = depth % k
+    # Ensure all points have the same dimension
+    num_dimensions = len(point_list[0])
+    if not all(len(point) == num_dimensions for point in point_list):
+        raise ValueError("All points must have the same dimension")
 
-    # Sort point list and choose median as pivot element
-    point_list.sort(key=lambda x: x[axis])
-    median = len(point_list) // 2  # choose median
+    # Select axis based on depth so that axis cycles through all valid values
+    axis = depth % num_dimensions
+
+    # Sort point list based on the current axis
+    point_list[start:end] = sorted(point_list[start:end], key=lambda x: x[axis])
+
+    # Choose median as pivot element
+    median = (start + end) // 2
 
     # Create node and construct subtrees
     return Node(
         point_list[median],
-        kd_tree(point_list[:median], depth + 1),
-        kd_tree(point_list[median + 1:], depth + 1)
-    )
+        kd_tree(point_list, depth + 1, start, median),
+        kd_tree(point_list, depth + 1, median + 1, end)
+    ) 
