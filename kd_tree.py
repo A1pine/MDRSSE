@@ -4,6 +4,26 @@ class Node:
         self.left_child = left_child
         self.right_child = right_child
 
+
+
+def print_preorder(node):
+    """
+    Prints the KD-Tree in pre-order.
+    
+    Parameters:
+    - node: The current node being visited.
+    """
+    if node:
+        # Visit the current node
+        print(node.point)
+        
+        # Visit the left subtree
+        print_preorder(node.left_child)
+        
+        # Visit the right subtree
+        print_preorder(node.right_child)
+
+
 def kd_tree(point_list, depth=0, start=0, end=None):
     """
     Recursively constructs a KD-Tree from a list of k-dimensional points.
@@ -45,4 +65,7 @@ def kd_tree(point_list, depth=0, start=0, end=None):
         point_list[median],
         kd_tree(point_list, depth + 1, start, median),
         kd_tree(point_list, depth + 1, median + 1, end)
-    ) 
+    )
+points = [(2,3), (5,4), (9,6), (4,7), (8,1), (7,2)]
+tree = kd_tree(points) 
+print_preorder(tree)
