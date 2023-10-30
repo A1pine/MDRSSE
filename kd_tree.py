@@ -1,71 +1,67 @@
 class Node:
-    def __init__(self, point, left_child, right_child):
-        self.point = point
-        self.left_child = left_child
-        self.right_child = right_child
+    def __init__(self, partition_value=None, points_left=None, points_right=None, left=None, right=None):
+        self.partition_value = partition_value
+        self.points_left = points_left
+        self.points_right = points_right
+        self.left = left
+        self.right = right
 
-
-
-def print_preorder(node):
-    """
-    Prints the KD-Tree in pre-order.
-    
-    Parameters:
-    - node: The current node being visited.
-    """
-    if node:
-        # Visit the current node
-        print(node.point)
-        
-        # Visit the left subtree
-        print_preorder(node.left_child)
-        
-        # Visit the right subtree
-        print_preorder(node.right_child)
-
-
-def kd_tree(point_list, depth=0, start=0, end=None):
-    """
-    Recursively constructs a KD-Tree from a list of k-dimensional points.
-    
-    Parameters:
-    - point_list: List of k-dimensional points.
-    - depth: Current depth of recursion.
-    - start: Starting index for the current subset of points.
-    - end: Ending index for the current subset of points.
-    
-    Returns:
-    - Root node of the constructed KD-Tree.
-    """
- 
-    # The ending index is the last one of the pont list by default
-    if end is None:
-        end = len(point_list)
-
-    # No node in the current sub-tree
-    if start >= end:
+def build_kd_tree(points, threshold=3, depth=0):
+    if not points:
         return None
     
-    # Ensure all points have the same dimension
-    num_dimensions = len(point_list[0])
-    if not all(len(point) == num_dimensions for point in point_list):
-        raise ValueError("All points must have the same dimension")
-
     # Select axis based on depth so that axis cycles through all valid values
-    axis = depth % num_dimensions
-
-    # Sort point list based on the current axis
-    point_list[start:end] = sorted(point_list[start:end], key=lambda x: x[axis])
-
-    # Choose median as pivot element
-    median = (start + end) // 2
-
-    # Create node and construct subtrees
+    axis = depth % 2
+    sorted_points = sorted(points, key=lambda point: point[axis])
+    median = len(sorted_points) // 2
+    
+    # If the number of points is less than or equal to the threshold, then it's a leaf node
+    if len(points) <= threshold:
+        if median == 0:
+            return Node(points_left=sorted_points[:median], points_right=sorted_points[median:])
+        return Node(points_left=sorted_points[:median], points_right=sorted_points[median:])
+    
+    # Create a new node and construct the subtrees
     return Node(
-        point_list[median],
-        kd_tree(point_list, depth + 1, start, median),
-        kd_tree(point_list, depth + 1, median + 1, end)
+        partition_value=sorted_points[median][axis],
+        left=build_kd_tree(sorted_points[:median], threshold, depth + 1),
+        right=build_kd_tree(sorted_points[median:], threshold, depth + 1)
     )
-points = [(2,3), (5,4), (9,6), (4,7), (8,1), (7,2)]
-tree = kd_tree(points) 
-print_preorder(tree)
+
+node_counter = 1
+def print_leaf_nodes(node):
+    global node_counter
+
+    # Base case: If the node is a leaf node, print its points
+    if node.points_left or node.points_right:
+        if node.points_left:
+            print(f'n{node_counter}, {node.points_left}')
+            node_counter += 1
+        if node.points_right:
+            print(f'n{node_counter}, {node.points_right}')
+            node_counter += 1
+        return
+    
+    # Recursive case: Traverse the left and right subtrees
+    if node.left:
+        print_leaf_nodes(node.left)
+    if node.right:
+        print_leaf_nodes(node.right)
+
+# Example
+points = [
+    (66, 430),
+    (32, 120),
+    (47, 110),
+    (27, 200),
+    (35, 470),
+    (36, 280),
+    (42, 250),
+    (64, 210),
+    (50, 365),
+    (58, 510),
+    (47, 540),
+    (67, 620)
+]
+kd_tree = build_kd_tree(points, threshold=3)
+print_leaf_nodes(kd_tree)
