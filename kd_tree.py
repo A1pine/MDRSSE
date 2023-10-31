@@ -48,20 +48,4 @@ def print_leaf_nodes(node):
     if node.right:
         print_leaf_nodes(node.right)
 
-# Example
-points = [
-    (66, 430),
-    (32, 120),
-    (47, 110),
-    (27, 200),
-    (35, 470),
-    (36, 280),
-    (42, 250),
-    (64, 210),
-    (50, 365),
-    (58, 510),
-    (47, 540),
-    (67, 620)
-]
-kd_tree = build_kd_tree(points, threshold=3)
-print_leaf_nodes(kd_tree)
+
