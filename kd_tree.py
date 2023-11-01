@@ -40,3 +40,20 @@ def preorder_traversal(root):
             print(root.points_list)
 
 
+def create_inverted_index(node, index=None, path=''):
+    if index is None:  # If there is no index yet, create an empty one
+        index = {}
+    if node is not None:
+        if node.points_list is not None:  # If we're at a leaf node
+            for point in node.points_list:
+                # Convert the point to a string to use as a key
+                point_str = str(point)
+                if point_str not in index:
+                    index[point_str] = []
+                # Add the path to this node to the list of paths for this point
+                index[point_str].append(path)
+        else:  # If we're not at a leaf node
+            # Recurse on the left and right children, adding 'L' or 'R' to the path
+            create_inverted_index(node.left, index, path + 'L')
+            create_inverted_index(node.right, index, path + 'R')
+    return index
