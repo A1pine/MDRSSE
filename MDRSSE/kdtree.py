@@ -84,8 +84,6 @@ def preorder_traversal(root):
         else:
             print(root.points_list)
 
-def create_inverted_index(node, inverted_index = {}):
-
 
 def create_inverted_index(node, inverted_index = {}):
 
