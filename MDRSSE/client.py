@@ -17,7 +17,9 @@ class MDRSSEClient:
     def decrypt_data(self, encrypted_data):
         # Decrypts the encrypted data records
         return json.loads(self.fernet.decrypt(encrypted_data).decode())
-
+    
+    def decrypt_results(self, encrypted_results):
+        return [self.decrypt_data(encrypted_data) for encrypted_data in encrypted_results]
 
     def point_to_string(self, point):
         # Converts a data point to a string representation
